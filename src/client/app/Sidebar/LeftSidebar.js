@@ -1,30 +1,24 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router-dom';
 import UserInfo from './UserInfo';
 import TopInstruments from './TopInstruments';
 import TopPerformers from './TopPerformers/TopPerformers';
-import MarketsList from './MarketsList';
 import SidenavUser from '../../components/Navigation/SidenavUser';
 import SidebarMenu from '../../components/Sidebar/SidebarMenu';
 import SidenavRewards from '../../components/Navigation/SidenavRewards';
 import SidenavDiscoverObjects from '../../discoverObjects/SidenavDiscoverObjects';
 import DealsList from './DealsList';
-import { isGuestUser } from '../../reducers';
+// import { isGuestUser } from '../../reducers';
 
-const LeftSidebar = ({ quoteSettingsSorted }) => {
-  const isGuest = useSelector(isGuestUser, shallowEqual());
+const LeftSidebar = () => {
+  // const isGuest = useSelector(isGuestUser, shallowEqual());
   return (
     <Switch>
       <Route path="/@:name/wallet" component={TopInstruments} />
       <Route path="/my_feed" component={TopInstruments} />
       <Route path="/@:name" component={UserInfo} />
       <Route path="/object/:name" component={UserInfo} />
-      <Route
-        path="/markets/:marketType"
-        render={props => <MarketsList quoteSettingsSorted={quoteSettingsSorted} {...props} />}
-      />
       <Route path="/deals/:dealType" component={DealsList} />
       <Route path="/activity" component={SidenavUser} />
       <Route
@@ -47,14 +41,6 @@ const LeftSidebar = ({ quoteSettingsSorted }) => {
       <Route path="/" component={TopPerformers} />
     </Switch>
   );
-};
-
-LeftSidebar.propTypes = {
-  quoteSettingsSorted: PropTypes.shape(),
-};
-
-LeftSidebar.defaultProps = {
-  quoteSettingsSorted: null,
 };
 
 export default LeftSidebar;

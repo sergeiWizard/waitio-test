@@ -89,6 +89,7 @@ class TopPerformers extends Component {
     compareWith: null,
     getPerformersStatsMore: () => {},
   };
+
   static periods = {
     // d1: 'Daily',
     d7: 'Week',
@@ -98,6 +99,10 @@ class TopPerformers extends Component {
     m12: 'Year',
     // m24: 'Two Years',
   };
+
+  shouldComponentUpdate(nextProps, nextState) {
+    debugger;
+  }
 
   loadMorePerformers = e => {
     const period = e.currentTarget.id;

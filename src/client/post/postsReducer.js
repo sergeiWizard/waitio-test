@@ -1,4 +1,5 @@
 import { each, find, omit } from 'lodash';
+import { createSelector } from 'reselect';
 import * as feedTypes from '../feed/feedActions';
 import * as postsActions from './postActions';
 import * as commentsActions from '../comments/commentsActions';
@@ -225,8 +226,16 @@ const posts = (state = initialState, action) => {
 export default posts;
 
 export const getPosts = state => state.list;
-export const getPostContent = (state, author, permlink) =>
-  Object.values(state.list).find(post => post.author === author && post.permlink === permlink);
+export const getPostContent = (state, author, permlink) => createSelector(
+  [ getPosts ],
+  list => Object.values(list).find(post => post.author === author && post.permlink === permlink)
+);
+
+// // selector
+// export const getChartsState = state => state.charts;
+// // reselect function
+// export const getAssetsChartsState = state => state.charts.assets;
+
 export const getPendingLikes = state => state.pendingLikes;
 export const getIsPostFetching = (state, author, permlink) =>
   state.postsStates[`${author}/${permlink}}`] &&

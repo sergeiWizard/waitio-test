@@ -29,7 +29,6 @@ import Notifications from '../client/notifications/Notifications';
 import Error404 from '../client/statics/Error404';
 import ExitPage from '../client/statics/ExitPage';
 import ObjectProfile from '../client/object/ObjectProfile';
-import InstrumentsPage from '../investarena/components/InstrumentsPage';
 import DealsPage from '../investarena/components/DealsPage';
 import WobjFollowers from '../client/object/WobjFollowers';
 import ObjectGalleryAlbum from '../client/object/ObjectGallery/ObjectGalleryAlbum';
@@ -305,11 +304,6 @@ const routes = [
       {
         path: '/objects',
         component: Objects,
-      },
-      {
-        path: '/markets/:marketType',
-        component: InstrumentsPage,
-        exact: true,
       },
       {
         path: '/deals/:dealType',
