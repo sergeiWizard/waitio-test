@@ -232,12 +232,8 @@ export const getPostContent = (state, author, permlink) => createSelector(
   [ getPosts ],
   list => Object.values(list).find(post => post.author === author && post.permlink === permlink)
 );
-
-// // selector
-// export const getChartsState = state => state.charts;
-// // reselect function
-// export const getAssetsChartsState = state => state.charts.assets;
-
+// export const getPostContent = (state, author, permlink) =>
+//   Object.values(state.list).find(post => post.author === author && post.permlink === permlink);
 export const getPendingLikes = state => state.pendingLikes;
 export const getIsPostFetching = (state, author, permlink) =>
   state.postsStates[`${author}/${permlink}}`] &&

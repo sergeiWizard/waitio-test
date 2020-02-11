@@ -9,10 +9,10 @@ import SidebarMenu from '../../components/Sidebar/SidebarMenu';
 import SidenavRewards from '../../components/Navigation/SidenavRewards';
 import SidenavDiscoverObjects from '../../discoverObjects/SidenavDiscoverObjects';
 import DealsList from './DealsList';
-// import { isGuestUser } from '../../reducers';
+import { isGuestUser } from '../../reducers';
 
 const LeftSidebar = () => {
-  // const isGuest = useSelector(isGuestUser, shallowEqual());
+  const isGuest = useSelector(isGuestUser, shallowEqual());
   return (
     <Switch>
       <Route path="/@:name/wallet" component={TopInstruments} />
