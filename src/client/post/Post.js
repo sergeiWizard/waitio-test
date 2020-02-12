@@ -44,6 +44,15 @@ import ScrollToTopOnMount from '../components/Utils/ScrollToTopOnMount';
   { getContent, getAccount },
 )
 export default class Post extends React.Component {
+
+  static fetchData({ store, match }) {
+    const { author, permlink } = match.params;
+    return Promise.all([
+      store.dispatch(getAccount(author)),
+      store.dispatch(getContent(author, permlink)),
+    ]);
+  }
+
   static propTypes = {
     isAuthFetching: PropTypes.bool.isRequired,
     match: PropTypes.shape().isRequired,
@@ -67,14 +76,6 @@ export default class Post extends React.Component {
     getContent: () => {},
     getAccount: () => {},
   };
-
-  static fetchData({ store, match }) {
-    const { author, permlink } = match.params;
-    return Promise.all([
-      store.dispatch(getAccount(author)),
-      store.dispatch(getContent(author, permlink)),
-    ]);
-  }
 
   state = {
     commentsVisible: false,
