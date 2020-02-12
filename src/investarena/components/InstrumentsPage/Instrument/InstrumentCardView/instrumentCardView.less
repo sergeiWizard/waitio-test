@@ -1,3 +1,4 @@
+@import '../../../Common.less';
 @import (reference) '../../../../../client/styles/common.less';
 @import (reference) '../../../../../client/styles/modules/variables.less';
 
@@ -10,6 +11,7 @@
   border: 1px solid @blue-hawkesBlue;
   border-radius: 4px;
   margin-top: 5px;
+
   &__content {
     width: 100%;
     position: relative;
@@ -19,12 +21,14 @@
     outline: none;
     margin: @wrapPadding;
   }
+
   &__content-row {
     display: flex;
     flex-flow: row;
     flex-wrap: wrap;
     width: 100%;
   }
+
   &__info {
     width: 70%;
     max-width: 70%;
@@ -32,6 +36,7 @@
     word-wrap: break-word;
     word-break: break-word;
     white-space: normal;
+
     &.small {
       .InstrumentCardView__title,
       .InstrumentCardView__name-truncated {
@@ -39,8 +44,10 @@
       }
     }
   }
+
   &__avatar {
     width: 25%;
+
     .avatar-image {
       width: 100%;
       padding-top: 100%;
@@ -52,17 +59,21 @@
       border: 1px solid #e9e7e7;
     }
   }
+
   &__type {
     color: @blue-botticelli;
     margin-bottom: 0.5em;
   }
+
   &__price {
     color: @blue-botticelli;
     margin-bottom: 0.5em;
+
     i {
       margin-right: 5px;
     }
   }
+
   &__name {
     cursor: auto;
     display: flex;
@@ -78,6 +89,7 @@
       font-weight: 600;
     }
   }
+
   &__title {
     margin-top: 0.5em;
     color: @black;
