@@ -1,4 +1,5 @@
 import { each, find, omit } from 'lodash';
+import { createSelector } from 'reselect';
 import * as feedTypes from '../feed/feedActions';
 import * as postsActions from './postActions';
 import * as commentsActions from '../comments/commentsActions';
@@ -227,13 +228,23 @@ const posts = (state = initialState, action) => {
 export default posts;
 
 export const getPosts = state => state.list;
-export const getPostContent = (state, author, permlink) =>
-  Object.values(state.list).find(post => post.author === author && post.permlink === permlink);
+export const getPostContent = (state, author, permlink) => createSelector(
+  [ getPosts ],
+  list => Object.values(list).find(post => post.author === author && post.permlink === permlink)
+);
+// export const getPostContent = (state, author, permlink) =>
+//   Object.values(state.list).find(post => post.author === author && post.permlink === permlink);
 export const getPendingLikes = state => state.pendingLikes;
-export const getIsPostFetching = (state, author, permlink) =>
-  state.postsStates[`${author}/${permlink}}`] &&
-  state.postsStates[`${author}/${permlink}}`].fetching;
-export const getIsPostLoaded = (state, author, permlink) =>
-  state.postsStates[`${author}/${permlink}}`] && state.postsStates[`${author}/${permlink}}`].loaded;
-export const getIsPostFailed = (state, author, permlink) =>
-  state.postsStates[`${author}/${permlink}}`] && state.postsStates[`${author}/${permlink}}`].failed;
+
+export const getIsPostFetching = (state, author, permlink) => createSelector(
+   () => state.postsStates[`${author}/${permlink}}`] &&
+   state.postsStates[`${author}/${permlink}}`].fetching
+);
+
+export const getIsPostLoaded = (state, author, permlink) => createSelector(
+  () => state.postsStates[`${author}/${permlink}}`] && state.postsStates[`${author}/${permlink}}`].loaded
+);
+
+export const getIsPostFailed = (state, author, permlink) => createSelector(
+  () => state.postsStates[`${author}/${permlink}}`] && state.postsStates[`${author}/${permlink}}`].failed
+);

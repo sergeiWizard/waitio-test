@@ -48,20 +48,23 @@ class TopInstruments extends React.Component {
 
   static defaultProps = {
     charts: {},
-    followingObjects: { list: [] },
+    followingObjects: {list: []},
   };
 
   state = {
-    instrumentsToShow: { Crypto: [], Currency: [], Commodity: [], Stock: [], Index: [] },
+    instrumentsToShow: {Crypto: [], Currency: [], Commodity: [], Stock: [], Index: []},
     isLoading: true,
     instrumentsCount: 0,
   };
+
   componentDidMount() {
     this.prepareItems(this.props);
   }
+
   componentWillReceiveProps(nextProps) {
     this.prepareItems(nextProps);
   }
+
   prepareItems(props) {
     if (_.size(props.quotesSettings) > 0 && this.state.isLoading) {
       if (props.isAuthenticated) {
@@ -69,7 +72,7 @@ class TopInstruments extends React.Component {
           this.sortSidebarItems(props.quotesSettings);
         }
       }
-      this.setState({ isLoading: false });
+      this.setState({isLoading: false});
     }
   }
 
@@ -82,8 +85,8 @@ class TopInstruments extends React.Component {
   };
 
   sortSidebarItems(quotesSettings) {
-    const { followingObjects } = this.props;
-    const instrumentsToShow = { Crypto: [], Currency: [], Commodity: [], Stock: [], Index: [] };
+    const {followingObjects} = this.props;
+    const instrumentsToShow = {Crypto: [], Currency: [], Commodity: [], Stock: [], Index: []};
     let instrumentsCount = 0;
     _.forEach(quotesSettings, quoteSettings => {
       if (
@@ -98,66 +101,62 @@ class TopInstruments extends React.Component {
       }
     });
 
-    this.setState({ instrumentsToShow, isLoading: false, instrumentsCount });
+    this.setState({instrumentsToShow, isLoading: false, instrumentsCount});
   }
 
   render() {
-    const { quotesSettings, charts, intl, isAuthenticated } = this.props;
-    const { isLoading, instrumentsCount } = this.state;
+    const {quotesSettings, charts, intl, isAuthenticated} = this.props;
+    const {isLoading, instrumentsCount} = this.state;
     const instrumentsToShow = isAuthenticated ? this.state.instrumentsToShow : instrumentsDefault;
+
+    if (isLoading) return <TopInstrumentsLoading/>;
     return (
       <React.Fragment>
-        {!isLoading ? (
-          <React.Fragment>
-            {isAuthenticated && (
-              <div className="SidebarContentBlock SidebarContentBlock__title">
-                {intl
-                  .formatMessage({
-                    id: 'wia.followingInstruments',
-                    defaultMessage: 'Following instruments',
-                  })
-                  .toUpperCase()}
-                <div className="SidebarContentBlock__amount">{instrumentsCount}</div>
+        {isAuthenticated && (
+          <div className="SidebarContentBlock SidebarContentBlock__title">
+            {intl
+              .formatMessage({
+                id: 'wia.followingInstruments',
+                defaultMessage: 'Following instruments',
+              })
+              .toUpperCase()}
+            <div className="SidebarContentBlock__amount">{instrumentsCount}</div>
+          </div>
+        )}
+        {marketNames.map(
+          market =>
+            !_.isEmpty(instrumentsToShow[market.name]) && (
+              <div className="SidebarContentBlock top-instruments" key={market.name}>
+                <div className="SidebarContentBlock__title">
+                  <Link to={`/markets/${market.name.toLowerCase()}`}>
+                    {intl.formatMessage(market.intl).toUpperCase()}
+                  </Link>
+                  {/* {isAuthenticated && <div className="SidebarContentBlock__amount">{instrumentsToShow[market.name].length}</div>} */}
+                </div>
+                <div className="SidebarContentBlock__content">
+                  {instrumentsToShow[market.name].map(
+                    instrumentName =>
+                      quotesSettings[instrumentName] &&
+                      quotesSettings[instrumentName].wobjData && (
+                        <TopInstrumentsItem
+                          key={instrumentName}
+                          toggleModalTC={this.toggleModalInstrumentsChart}
+                          intl={intl}
+                          quoteSettings={quotesSettings[instrumentName]}
+                          quoteSecurity={instrumentName}
+                          chart={charts && charts[instrumentName] ? charts[instrumentName] : []}
+                          showTradeBtn={false}
+                          chartHeight={60}
+                          chartWidth={160}
+                        />
+                      ),
+                  )}
+                </div>
               </div>
-            )}
-            {marketNames.map(
-              market =>
-                !_.isEmpty(instrumentsToShow[market.name]) && (
-                  <div className="SidebarContentBlock top-instruments" key={market.name}>
-                    <div className="SidebarContentBlock__title">
-                      <Link to={`/markets/${market.name.toLowerCase()}`}>
-                        {intl.formatMessage(market.intl).toUpperCase()}
-                      </Link>
-                      {/* {isAuthenticated && <div className="SidebarContentBlock__amount">{instrumentsToShow[market.name].length}</div>} */}
-                    </div>
-                    <div className="SidebarContentBlock__content">
-                      {instrumentsToShow[market.name].map(
-                        instrumentName =>
-                          quotesSettings[instrumentName] &&
-                          quotesSettings[instrumentName].wobjData && (
-                            <TopInstrumentsItem
-                              key={instrumentName}
-                              toggleModalTC={this.toggleModalInstrumentsChart}
-                              intl={intl}
-                              quoteSettings={quotesSettings[instrumentName]}
-                              quoteSecurity={instrumentName}
-                              chart={charts && charts[instrumentName] ? charts[instrumentName] : []}
-                              showTradeBtn={false}
-                              chartHeight={60}
-                              chartWidth={160}
-                            />
-                          ),
-                      )}
-                    </div>
-                  </div>
-                ),
-            )}
-          </React.Fragment>
-        ) : (
-          <TopInstrumentsLoading />
+            ),
         )}
       </React.Fragment>
-    );
+    )
   }
 }
 

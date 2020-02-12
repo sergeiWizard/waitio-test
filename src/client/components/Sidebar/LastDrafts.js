@@ -28,7 +28,7 @@ Draft.propTypes = {
   draft: draftType.isRequired,
 };
 
-const LastDrafts = ({ drafts, loaded }) => {
+const LastDrafts = React.memo(({ drafts, loaded }) => {
   if (!loaded) {
     return <Loading />;
   }
@@ -58,7 +58,8 @@ const LastDrafts = ({ drafts, loaded }) => {
       </div>
     </div>
   );
-};
+}
+);
 
 LastDrafts.propTypes = {
   drafts: draftArrayType,

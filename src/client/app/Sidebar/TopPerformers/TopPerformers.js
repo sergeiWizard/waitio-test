@@ -89,6 +89,7 @@ class TopPerformers extends Component {
     compareWith: null,
     getPerformersStatsMore: () => {},
   };
+
   static periods = {
     // d1: 'Daily',
     d7: 'Week',

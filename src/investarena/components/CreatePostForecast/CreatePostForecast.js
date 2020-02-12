@@ -15,7 +15,7 @@ import {
 } from './helpers';
 import { maxForecastDay, minForecastMinutes } from '../../constants/constantsForecast';
 import { ceil10, floor10 } from '../../helpers/calculationsHelper';
-import { getQuotesSettingsState } from '../../../investarena/redux/selectors/quotesSettingsSelectors';
+import { makeGetQuoteSettingsState } from '../../../investarena/redux/selectors/quotesSettingsSelectors';
 import {
   makeGetQuoteState,
   makeGetInstrumentsDropdownOptions,
@@ -24,14 +24,14 @@ import './CreatePostForecast.less';
 
 @injectIntl
 @connect((state, ownProps) => ({
-  quotesSettings: getQuotesSettingsState(state),
+  quoteSettings: makeGetQuoteSettingsState()(state, ownProps.forecastValues),
   optionsQuote: makeGetInstrumentsDropdownOptions()(state),
   quoteSelected: makeGetQuoteState()(state, ownProps.forecastValues),
 }))
 class CreatePostForecast extends Component {
   static propTypes = {
     intl: PropTypes.shape().isRequired,
-    quotesSettings: PropTypes.shape(),
+    quoteSettings: PropTypes.shape(),
     quoteSelected: PropTypes.shape(),
     isPosted: PropTypes.bool,
     isUpdating: PropTypes.bool,
@@ -41,7 +41,7 @@ class CreatePostForecast extends Component {
   };
 
   static defaultProps = {
-    quotesSettings: {},
+    quoteSettings: {},
     quoteSelected: {},
     isPosted: false,
     isUpdating: false,
@@ -77,7 +77,7 @@ class CreatePostForecast extends Component {
               ...prevState,
               quotePrice: nextQuotePrice,
             },
-            nextProps.quotesSettings,
+            nextProps.quoteSettings,
           ),
         );
       }
@@ -113,7 +113,7 @@ class CreatePostForecast extends Component {
           takeProfitValueIncorrect: false,
           stopLossValueIncorrect: false,
         },
-        this.props.quotesSettings,
+        this.props.quoteSettings,
       ),
     );
   };
@@ -133,7 +133,7 @@ class CreatePostForecast extends Component {
           takeProfitValueIncorrect: false,
           stopLossValueIncorrect: false,
         },
-        this.props.quotesSettings,
+        this.props.quoteSettings,
       ),
     );
   };
@@ -160,7 +160,7 @@ class CreatePostForecast extends Component {
               [input]: value,
               [propName]: propValue,
             },
-            this.props.quotesSettings,
+            this.props.quoteSettings,
           ),
         ),
       );
@@ -200,7 +200,7 @@ class CreatePostForecast extends Component {
               ...this.state,
               [input]: initialValue,
             },
-            this.props.quotesSettings,
+            this.props.quoteSettings,
           ),
         ),
       );
@@ -215,7 +215,7 @@ class CreatePostForecast extends Component {
           ...this.state,
           dateTimeValue: moment.utc(dateTimeValue),
         },
-        this.props.quotesSettings,
+        this.props.quoteSettings,
       ),
     );
   };
@@ -229,7 +229,7 @@ class CreatePostForecast extends Component {
             selectForecast,
             dateTimeValue: moment.utc().add(minForecastMinutes, 'minute'),
           },
-          this.props.quotesSettings,
+          this.props.quoteSettings,
         ),
       );
     } else {
@@ -239,7 +239,7 @@ class CreatePostForecast extends Component {
             ...this.state,
             selectForecast,
           },
-          this.props.quotesSettings,
+          this.props.quoteSettings,
         ),
       );
     }
