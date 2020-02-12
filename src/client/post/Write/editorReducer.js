@@ -1,4 +1,5 @@
-import { get } from 'lodash';
+import { get, orderBy, slice } from 'lodash';
+import {createSelector} from "reselect";
 import * as editorActions from './editorActions';
 import * as postActions from '../postActions';
 import * as authActions from '../../auth/authActions';
@@ -128,7 +129,15 @@ const editor = (state = defaultState, action) => {
 
 export default editor;
 
-export const getDraftPosts = state => state.draftPosts;
+export const getDraftPosts = (state) => state.draftPosts;
+
+export const getOrderedByDateDraftPosts = createSelector(
+  getDraftPosts,
+  (state, count) => count,
+  (drafts, counts) => slice(orderBy(drafts,draft => new Date(draft.lastUpdated), [
+    'desc',
+  ]), 0, counts)
+);
 export const getIsEditorLoading = state => state.loading;
 export const getIsEditorSaving = state => state.saving;
 export const getPendingDrafts = state => state.pendingDrafts;

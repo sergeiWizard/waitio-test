@@ -235,10 +235,16 @@ export const getPostContent = (state, author, permlink) => createSelector(
 // export const getPostContent = (state, author, permlink) =>
 //   Object.values(state.list).find(post => post.author === author && post.permlink === permlink);
 export const getPendingLikes = state => state.pendingLikes;
-export const getIsPostFetching = (state, author, permlink) =>
-  state.postsStates[`${author}/${permlink}}`] &&
-  state.postsStates[`${author}/${permlink}}`].fetching;
-export const getIsPostLoaded = (state, author, permlink) =>
-  state.postsStates[`${author}/${permlink}}`] && state.postsStates[`${author}/${permlink}}`].loaded;
-export const getIsPostFailed = (state, author, permlink) =>
-  state.postsStates[`${author}/${permlink}}`] && state.postsStates[`${author}/${permlink}}`].failed;
+
+export const getIsPostFetching = (state, author, permlink) => createSelector(
+   () => state.postsStates[`${author}/${permlink}}`] &&
+   state.postsStates[`${author}/${permlink}}`].fetching
+);
+
+export const getIsPostLoaded = (state, author, permlink) => createSelector(
+  () => state.postsStates[`${author}/${permlink}}`] && state.postsStates[`${author}/${permlink}}`].loaded
+);
+
+export const getIsPostFailed = (state, author, permlink) => createSelector(
+  () => state.postsStates[`${author}/${permlink}}`] && state.postsStates[`${author}/${permlink}}`].failed
+);

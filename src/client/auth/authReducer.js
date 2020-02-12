@@ -1,4 +1,5 @@
 import { get } from 'lodash';
+import {createSelector} from "reselect";
 import * as types from './authActions';
 import { GET_USER_METADATA } from '../user/usersActions';
 
@@ -89,19 +90,43 @@ export default (state = initialState, action) => {
   }
 };
 
-export const getIsAuthenticated = state => state.isAuthenticated;
-export const getIsAuthFetching = state => state.isFetching;
-export const getIsLoaded = state => state.loaded;
+export const getIsAuthenticatedState = state => state.isAuthenticated;
+export const getIsAuthenticated = createSelector(
+  [getIsAuthenticatedState],
+  isAuthenticated => isAuthenticated
+);
+export const getIsAuthFetchingState = state => state.isFetching;
+export const getIsAuthFetching = createSelector(
+  [getIsAuthFetchingState],
+  isFetching => isFetching
+);
+export const getIsLoadedState = state => state.loaded;
+export const getIsLoaded = createSelector(
+  [getIsLoadedState],
+  loaded => loaded
+);
 export const getIsReloading = state => state.isReloading;
-export const getAuthenticatedUser = state => state.user;
-export const getAuthenticatedUserName = state => state.user.name;
+
+export const getAuthenticatedUserState = state => state.user;
+export const getAuthenticatedUser = createSelector(
+  [getAuthenticatedUserState],
+  user => user
+);
+export const getAuthenticatedUserNameState = state => state.user.name;
+export const getAuthenticatedUserName = createSelector(
+  [getAuthenticatedUserNameState],
+  name => name
+);
 export const getAuthenticateduserMetaData = state => state.userMetaData;
-export const getAuthenticatedUserAvatar = state => {
-  let jsonMetadata = get(state, 'user.json_metadata');
-  if (jsonMetadata) {
-    jsonMetadata = JSON.parse(state.user.json_metadata);
-    return get(jsonMetadata, 'profile.profile_image');
+
+export const getAuthenticatedUserAvatar = createSelector(
+  state => {
+    let jsonMetadata = get(state, 'user.json_metadata');
+    if (jsonMetadata) {
+      jsonMetadata = JSON.parse(state.user.json_metadata);
+      return get(jsonMetadata, 'profile.profile_image');
+    }
+    return undefined;
   }
-  return undefined;
-};
+);
 export const isGuestUser = state => state.isGuestUser;

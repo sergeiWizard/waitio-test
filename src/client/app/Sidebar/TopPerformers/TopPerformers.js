@@ -100,10 +100,6 @@ class TopPerformers extends Component {
     // m24: 'Two Years',
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
-    debugger;
-  }
-
   loadMorePerformers = e => {
     const period = e.currentTarget.id;
     this.props.getPerformersStatsMore(period, 5, this.props.performersStat[period].length);

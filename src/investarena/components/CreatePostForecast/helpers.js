@@ -98,7 +98,7 @@ export const getForecastState = forecast => {
   };
 };
 
-export const getEditorForecast = (forecast, quotesSettings) => {
+export const getEditorForecast = (forecast, quoteSettings) => {
   const {
     selectQuote,
     selectRecommend,
@@ -110,7 +110,6 @@ export const getEditorForecast = (forecast, quotesSettings) => {
     takeProfitValueIncorrect,
     stopLossValueIncorrect,
   } = forecast;
-  const quoteSettings = get(quotesSettings, [selectQuote], null);
   const price = parseFloat(quotePrice);
   const forecastObject = {
     quoteSecurity: selectQuote,
