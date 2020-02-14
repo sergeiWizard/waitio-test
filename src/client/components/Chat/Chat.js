@@ -32,7 +32,7 @@ const Chat = ({
     };
     switch (messageType) {
       case 'connected':
-        ifr.current.contentWindow.postMessage(requestData, 'https://staging.stchat.cf');
+        ifr.current.contentWindow.postMessage(requestData, 'https://stchat.cf');
         break;
       case 'init_response': {
         requestData.cmd = 'auth_connection';
@@ -50,13 +50,13 @@ const Chat = ({
         //   requestData.args.sessionData.blockNumber = data.value.result.block_num;
         // }
 
-        ifr.current.contentWindow.postMessage(requestData, 'https://staging.stchat.cf');
+        ifr.current.contentWindow.postMessage(requestData, 'https://stchat.cf');
         break;
       }
       case 'start_chat':
         requestData.cmd = 'start_chat';
         requestData.args.partner = postMessageData;
-        ifr.current.contentWindow.postMessage(requestData, 'https://staging.stchat.cf');
+        ifr.current.contentWindow.postMessage(requestData, 'https://stchat.cf');
         break;
       default:
     }
@@ -65,7 +65,7 @@ const Chat = ({
   useEffect(() => {
     setCloseButton(true);
     window.addEventListener('message', event => {
-      if (event && event.data && event.origin === 'https://staging.stchat.cf') {
+      if (event && event.data && event.origin === 'https://stchat.cf') {
         switch (event.data.cmd) {
           case 'connected':
             sendChatRequestData('connected');
@@ -124,7 +124,7 @@ const Chat = ({
       <div className="Chat__wrap">
         {isConnectionStart && (
           <iframe
-            src="https://staging.stchat.cf/app.html"
+            src="https://stchat.cf/app.html"
             /* eslint no-return-assign: "error" */
             ref={ifr}
             title="frame"
