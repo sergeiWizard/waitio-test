@@ -22,7 +22,6 @@ describe('Debts', () => {
 
     wrapper = mountWithIntl(<Debts {...props} />);
   });
-
   afterEach(() => jest.clearAllMocks());
 
   it('should change way', () => {
