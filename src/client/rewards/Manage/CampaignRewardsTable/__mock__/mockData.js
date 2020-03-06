@@ -1,0 +1,42 @@
+// eslint-disable-next-line import/prefer-default-export
+export const initialState = {
+  campaigns: [
+    {
+      _id: '5e620da2fb97af17249e3f95',
+      activation_permlink: 'activate-monterey-ln7osqo19e',
+      budget: 0.1,
+      completed: 0,
+      name: 'TstCampa',
+      remaining: 1,
+      reserved: 0,
+      reward: 0.1,
+      status: 'active',
+      type: 'reviews',
+    },
+    {
+      _id: '5e38165d31b1bb6e49b265b6',
+      activation_permlink: 'activate-monterey-4znrq130xhe',
+      budget: 0.2,
+      completed: 0,
+      name: 'capa',
+      remaining: 0,
+      reserved: 0,
+      reward: 0.1,
+      status: 'expired',
+      type: 'reviews',
+    },
+    {
+      _id: '5e3815b431b1bb6e49b265b4',
+      activation_permlink: 'activate-monterey-4p0t3jnbpmr',
+      budget: 0.1,
+      completed: 0,
+      name: 'capaz1',
+      remaining: 0,
+      reserved: 0,
+      reward: 0.1,
+      status: 'expired',
+      type: 'reviews',
+    },
+  ],
+  userName: 'asd09',
+};

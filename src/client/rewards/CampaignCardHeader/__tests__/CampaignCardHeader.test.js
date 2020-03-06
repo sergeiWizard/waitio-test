@@ -3,6 +3,7 @@ import { mountWithIntl } from 'enzyme-react-intl';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter as Router } from 'react-router-dom';
 import CampaignCardHeader from '../CampaignCardHeader';
+import * as helpers from '../../rewardsHelper';
 import {
   initialState,
   stateForModalDetail,
@@ -10,7 +11,6 @@ import {
   stateForModalSteemMinus,
   stateForTotal,
 } from '../__mock__/mockData';
-import * as helpers from '../../rewardsHelper';
 
 jest.mock('../../../components/Avatar', () => () => <div className="Avatar" />);
 
