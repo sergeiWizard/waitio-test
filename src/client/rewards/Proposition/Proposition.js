@@ -47,6 +47,7 @@ const Proposition = ({
   }, []);
 
   const toggleModalDetails = ({ value }) => {
+    console.log('value', value);
     if (value) setReviewDetails(value);
     setModalDetailsOpen(!isModalDetailsOpen);
   };

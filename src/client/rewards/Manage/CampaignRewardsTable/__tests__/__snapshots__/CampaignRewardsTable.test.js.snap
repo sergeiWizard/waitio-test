@@ -113,7 +113,7 @@ ShallowWrapper {
         "entries": Array [
           Object {
             "hash": "",
-            "key": "eu647q",
+            "key": "u2j4pk",
             "pathname": "/",
             "search": "",
             "state": undefined,
@@ -127,7 +127,7 @@ ShallowWrapper {
         "listen": [Function],
         "location": Object {
           "hash": "",
-          "key": "eu647q",
+          "key": "u2j4pk",
           "pathname": "/",
           "search": "",
           "state": undefined,
@@ -245,7 +245,7 @@ ShallowWrapper {
           "entries": Array [
             Object {
               "hash": "",
-              "key": "eu647q",
+              "key": "u2j4pk",
               "pathname": "/",
               "search": "",
               "state": undefined,
@@ -259,7 +259,7 @@ ShallowWrapper {
           "listen": [Function],
           "location": Object {
             "hash": "",
-            "key": "eu647q",
+            "key": "u2j4pk",
             "pathname": "/",
             "search": "",
             "state": undefined,

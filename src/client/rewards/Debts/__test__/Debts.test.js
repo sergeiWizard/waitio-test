@@ -24,7 +24,7 @@ describe('Debts', () => {
   });
   afterEach(() => jest.clearAllMocks());
 
-  it('should change way', () => {
+  it('should change way in componentLocation', () => {
     const props = {
       debtObjsData: {
         histories: mockDataDebts.debtObjsData.histories,

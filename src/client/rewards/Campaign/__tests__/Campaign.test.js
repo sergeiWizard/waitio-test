@@ -1,22 +1,33 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import { IntlProvider } from 'react-intl';
+import { MemoryRouter as Router } from 'react-router-dom';
+import { mountWithIntl } from 'enzyme-react-intl';
 import Campaign from '../Campaign';
 import { initialState } from '../__mock__/mockData';
+import * as adapter from '../../../adapters';
 
-jest.mock('../../../Wrapper', () => () => <div className="context-wrap" />);
-jest.mock('../Campaign', () => () => <div className="Campaign-mock" />);
+jest.mock('../../../Wrapper', () => () => {});
+jest.mock('../../../adapters');
+jest.mock('../../../objectCard/ObjectCardView', () => () => <div className="ObjectCardView" />);
 
-describe('Campaign snapshot', () => {
+describe('Campaign', () => {
+  const mockgGetClientWObj = jest.spyOn(adapter, 'getClientWObj');
+  mockgGetClientWObj.mockReturnValue({ id: 1 });
+
   let wrapper;
-
-  it('renders and matches snapshot', () => {
+  beforeEach(() => {
     const props = initialState;
-    wrapper = shallow(
-      <IntlProvider>
+    wrapper = mountWithIntl(
+      <Router>
         <Campaign {...props} />
-      </IntlProvider>,
+      </Router>,
     );
-    expect(wrapper).toMatchSnapshot();
+  });
+
+  afterEach(() => jest.clearAllMocks());
+
+  it('should find class "Campaign', () => {
+    const container = wrapper.find('.Campaign');
+    console.log(container.debug());
+    expect(container).toHaveLength(1);
   });
 });

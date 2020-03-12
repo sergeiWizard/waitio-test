@@ -29,6 +29,7 @@ describe('CampaignRewardsTableRow', () => {
       </Router>,
     );
   });
+
   afterEach(() => jest.clearAllMocks());
 
   it('should return 0.10 in Monthly (STEEM)', () => {
@@ -54,5 +55,10 @@ describe('CampaignRewardsTableRow', () => {
   it('should return 1 in Remaining', () => {
     const container = wrapper.find('td').at(9);
     expect(container.text()).toEqual('1');
+  });
+
+  it('should return checkbox is checked', () => {
+    const checkBox = wrapper.find('.ant-checkbox-wrapper-checked');
+    expect(checkBox).toHaveLength(1);
   });
 });

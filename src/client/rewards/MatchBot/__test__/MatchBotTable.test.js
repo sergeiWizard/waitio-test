@@ -30,7 +30,7 @@ describe('MatchBotTable', () => {
     expect(component).toHaveLength(1);
   });
 
-  it('Fields with tag th is 6', () => {
+  it('Fields with tag "th" is 6', () => {
     act(() => {
       wrapper.update();
     });
