@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 import apiExtra from '../../apiExtra/Account';
 import { authorizeTokenSuccess } from './userActions';
 import { singleton } from '../../platform/singletonPlatform';
+import { GET_CHART_DATA_REQUEST } from './chartsActions';
 
 export const AUTHORIZE_TOKEN_SUCCESS = 'AUTHORIZE_TOKEN_SUCCESS';
 export const CONNECT_PLATFORM_REQUEST = 'CONNECT_PLATFORM_REQUEST';
@@ -12,6 +13,8 @@ export const GET_CHART_DATA = 'GET_CHART_DATA';
 export const GET_CHART_DATA_SUCCESS = 'GET_CHART_DATA_SUCCESS';
 export const UPDATE_USER_ACCOUNT_CURRENCY = 'UPDATE_USER_ACCOUNT_CURRENCY';
 export const UPDATE_USER_ACCOUNTS = 'UPDATE_USER_ACCOUNTS';
+export const GET_USER_SETTINGS = 'GET_USER_SETTINGS';
+export const GET_CROSS_STATISTICS = 'GET_CROSS_STATISTICS';
 
 const localStorageData = [
   'sid',
@@ -33,6 +36,17 @@ export function connectPlatform() {
   };
 }
 
+export function getUserCrossStatistics() {
+  return { type: GET_CROSS_STATISTICS };
+}
+
+export function getCrossStatistics() {
+  return dispatch => {
+    singleton.getCrossStatistics();
+    dispatch(getUserCrossStatistics());
+  };
+}
+
 export function authorizeToken(token) {
   return dispatch => {
     apiExtra.logonWithToken(token).then(({ data, error }) => {
@@ -48,6 +62,10 @@ export function authorizeToken(token) {
       }
     });
   };
+}
+
+export function getUserSettings(data) {
+  return { type: GET_USER_SETTINGS, payload: data };
 }
 
 export function checkAccountId() {

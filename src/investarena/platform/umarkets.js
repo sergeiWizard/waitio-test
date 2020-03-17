@@ -11,6 +11,7 @@ import {
   updateUserAccountCurrency,
   updateUserAccounts,
   updateUserStatistics,
+  getUserSettings,
 } from '../redux/actions/platformActions';
 import {
   getOpenDealsSuccess,
@@ -178,6 +179,10 @@ export class Umarkets {
     this.sendRequestToPlatform(CMD.getUserRates, '[]');
   }
 
+  getCrossStatistics() {
+    this.sendRequestToPlatform(CMD.getCrossStatistics, '[]');
+  }
+
   // getOpenDeals() {
   //   this.sendRequestToPlatform(CMD.getOpenDeals, '[]');
   // }
@@ -321,7 +326,7 @@ export class Umarkets {
           break;
         case 'favorites_security_added':
         case 'favorites_security_removed':
-          this.parseUpdateFavorites(result);
+          //this.parseUpdateFavorites(result);
           break;
       }
     }
@@ -382,6 +387,7 @@ export class Umarkets {
     const content = result.content;
     const quotesSettings = content.securitySettings;
     const tradingSessions = content.tradingSessions;
+    this.dispatch(getUserSettings(content.accountsMap));
     this.userSettings = content;
     const sortedQuotesSettings = {};
     const currentTime = Date.now();
