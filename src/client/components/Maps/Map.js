@@ -7,6 +7,8 @@ import { Icon, Modal } from 'antd';
 import Overlay from 'pigeon-overlay';
 import classNames from 'classnames';
 import { getClientWObj } from '../../adapters';
+import { getInnerFieldWithMaxWeight } from '../../object/wObjectHelper';
+import { mapFields, objectFields } from '../../../common/constants/listOfFields';
 import Loading from '../Icon/Loading';
 import { getRadius } from './mapHelper';
 import { getIsMapModalOpen, getSuitableLanguage } from '../../reducers';
@@ -81,9 +83,9 @@ class MapOS extends React.Component {
   getMarkers = () => {
     const { wobjects, onMarkerClick } = this.props;
     return !_.isEmpty(wobjects)
-      ? _.map(wobjects, wobject => {
-          const lat = wobject.map.coordinates[1];
-          const lng = wobject.map.coordinates[0];
+      && _.map(wobjects, wobject => {
+          const lat = getInnerFieldWithMaxWeight(wobject, objectFields.map, mapFields.latitude);
+          const lng = getInnerFieldWithMaxWeight(wobject, objectFields.map, mapFields.longitude);
           const isMarked = Boolean(wobject && wobject.campaigns);
           return lat && lng ? (
             <CustomMarker
@@ -96,8 +98,7 @@ class MapOS extends React.Component {
               onMouseOut={this.closeInfobox}
             />
           ) : null;
-        })
-      : null;
+        });
   };
 
   getOverlayLayout = () => {

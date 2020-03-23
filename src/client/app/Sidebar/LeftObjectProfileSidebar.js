@@ -11,7 +11,7 @@ const LeftObjectProfileSidebar = ({ isEditMode, wobject, userName }) => {
       isEditMode={isEditMode}
       wobject={wobject}
       userName={userName}
-      onClick={goToCampaign}
+      onMarkerClick={goToCampaign}
     />
   );
 };

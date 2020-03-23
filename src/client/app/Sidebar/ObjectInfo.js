@@ -55,6 +55,13 @@ class ObjectInfo extends React.Component {
     isAuthenticated: PropTypes.bool.isRequired,
     albums: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     usedLocale: PropTypes.string.isRequired,
+    onMarkerClick: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    getAreaSearchData: () => {},
+    userLocation: {},
+    center: [],
   };
 
   state = {
@@ -386,6 +393,9 @@ class ObjectInfo extends React.Component {
         )}
       </React.Fragment>
     );
+
+    const { onMarkerClick } = this.props;
+
     return (
       <React.Fragment>
         {wobject && wobject.name && (
@@ -497,6 +507,10 @@ class ObjectInfo extends React.Component {
                 <MapObjectInfo
                   mapHeigth={200}
                   center={[Number(map.latitude), Number(map.longitude)]}
+                  // heigth={268}
+                  width={270}
+                  onMarkerClick={onMarkerClick}
+                  wobject={wobject}
                 />
               ),
             )}

@@ -12,7 +12,6 @@ import {
   getAuthenticatedUser,
   getAuthenticatedUserName,
   getCryptosPriceHistory,
-  getFilteredObjectsMap,
   getIsLoaded,
   getUserLocation,
 } from '../reducers';
@@ -47,7 +46,6 @@ import { getObjectTypeMap } from '../objectTypes/objectTypeActions';
     userLocation: getUserLocation(state),
     cryptosPriceHistory: getCryptosPriceHistory(state),
     user: getAuthenticatedUser(state),
-    wobjects: getFilteredObjectsMap(state),
   }),
   { assignProposition, declineProposition, getCoordinates, activateCampaign, getObjectTypeMap },
 )
@@ -66,7 +64,6 @@ class Rewards extends React.Component {
     match: PropTypes.shape().isRequired,
     cryptosPriceHistory: PropTypes.shape().isRequired,
     getObjectTypeMap: PropTypes.func.isRequired,
-    wobjects: PropTypes.array,
   };
 
   static defaultProps = {
