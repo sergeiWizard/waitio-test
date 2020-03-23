@@ -2,9 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ObjectInfo from './ObjectInfo';
 
-const LeftObjectProfileSidebar = ({ isEditMode, wobject, userName }) => (
-  <ObjectInfo isEditMode={isEditMode} wobject={wobject} userName={userName} />
-);
+const LeftObjectProfileSidebar = ({ isEditMode, wobject, userName }) => {
+  const goToCampaign = WobjPermlink => {
+    this.props.history.push(`/rewards/active/${WobjPermlink}`);
+  };
+  return (
+    <ObjectInfo
+      isEditMode={isEditMode}
+      wobject={wobject}
+      userName={userName}
+      onClick={goToCampaign}
+    />
+  );
+};
 
 LeftObjectProfileSidebar.propTypes = {
   wobject: PropTypes.shape().isRequired,
