@@ -25,5 +25,4 @@ LeftObjectProfileSidebar.propTypes = {
 LeftObjectProfileSidebar.defaultProps = {
   isEditMode: false,
 };
-
 export default LeftObjectProfileSidebar;

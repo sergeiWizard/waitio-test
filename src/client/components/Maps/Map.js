@@ -82,23 +82,25 @@ class MapOS extends React.Component {
 
   getMarkers = () => {
     const { wobjects, onMarkerClick } = this.props;
-    return !_.isEmpty(wobjects)
-      && _.map(wobjects, wobject => {
-          const lat = getInnerFieldWithMaxWeight(wobject, objectFields.map, mapFields.latitude);
-          const lng = getInnerFieldWithMaxWeight(wobject, objectFields.map, mapFields.longitude);
-          const isMarked = Boolean(wobject && wobject.campaigns);
-          return lat && lng ? (
-            <CustomMarker
-              key={`obj${wobject.author_permlink}`}
-              isMarked={isMarked}
-              anchor={[+lat, +lng]}
-              payload={wobject}
-              onMouseOver={this.handleMarkerClick}
-              onClick={onMarkerClick}
-              onMouseOut={this.closeInfobox}
-            />
-          ) : null;
-        });
+    return (
+      !_.isEmpty(wobjects) &&
+      _.map(wobjects, wobject => {
+        const lat = getInnerFieldWithMaxWeight(wobject, objectFields.map, mapFields.latitude);
+        const lng = getInnerFieldWithMaxWeight(wobject, objectFields.map, mapFields.longitude);
+        const isMarked = Boolean(wobject && wobject.campaigns);
+        return lat && lng ? (
+          <CustomMarker
+            key={`obj${wobject.author_permlink}`}
+            isMarked={isMarked}
+            anchor={[+lat, +lng]}
+            payload={wobject}
+            onMouseOver={this.handleMarkerClick}
+            onClick={onMarkerClick}
+            onMouseOut={this.closeInfobox}
+          />
+        ) : null;
+      })
+    );
   };
 
   getOverlayLayout = () => {
