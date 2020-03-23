@@ -55,7 +55,7 @@ class ObjectInfo extends React.Component {
     isAuthenticated: PropTypes.bool.isRequired,
     albums: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     usedLocale: PropTypes.string.isRequired,
-    onMarkerClick: PropTypes.func.isRequired,
+    history: PropTypes.shape().isRequired,
   };
 
   static defaultProps = {
@@ -394,8 +394,6 @@ class ObjectInfo extends React.Component {
       </React.Fragment>
     );
 
-    const { onMarkerClick } = this.props;
-
     return (
       <React.Fragment>
         {wobject && wobject.name && (
@@ -509,8 +507,8 @@ class ObjectInfo extends React.Component {
                   center={[Number(map.latitude), Number(map.longitude)]}
                   // heigth={268}
                   width={270}
-                  onMarkerClick={onMarkerClick}
                   wobject={wobject}
+                  history={this.props.history}
                 />
               ),
             )}

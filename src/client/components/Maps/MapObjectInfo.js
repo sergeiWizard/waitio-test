@@ -50,7 +50,7 @@ class MapObjectInfo extends React.Component {
   }
 
   getMarkers = () => {
-    const { onMarkerClick, wobject } = this.props;
+    const { wobject } = this.props;
     const lat = getInnerFieldWithMaxWeight(wobject, objectFields.map, mapFields.latitude);
     const lng = getInnerFieldWithMaxWeight(wobject, objectFields.map, mapFields.longitude);
     const isMarked = Boolean(wobject && wobject.campaigns);
@@ -61,7 +61,7 @@ class MapObjectInfo extends React.Component {
         anchor={[+lat, +lng]}
         payload={wobject}
         onMouseOver={this.handleMarkerClick}
-        onClick={onMarkerClick}
+        onClick={this.onMarkerClick}
         onMouseOut={this.closeInfobox}
       />
     ) : null;
@@ -90,6 +90,10 @@ class MapObjectInfo extends React.Component {
         this.setState({ center: positionGPS });
       }
     }
+  };
+
+  onMarkerClick = permlink => {
+    this.props.history.push(`/object/${permlink.payload.id}`);
   };
 
   showUserPosition = position =>
@@ -135,18 +139,18 @@ class MapObjectInfo extends React.Component {
     </div>
   );
   render() {
-    const { mapHeigth, isFullscreenMode, setCoordinates, wobject } = this.props;
+    const { mapHeigth, isFullscreenMode, wobject } = this.props;
     const { center, infoboxData, zoom } = this.state;
     const markersLayout = this.getMarkers(wobject);
     return center ? (
       <div className="MapOS">
         <Map
           provider={mapProvider}
-          onBoundsChanged={this.onBoundsChanged}
+          // onBoundsChanged={this.onBoundsChanged}
           center={center}
           zoom={zoom}
           height={mapHeigth}
-          onClick={setCoordinates}
+          onClick={this.setCoordinates}
           animate
         >
           {markersLayout}
@@ -173,10 +177,11 @@ class MapObjectInfo extends React.Component {
             <div className="MapOS__fullscreenContent">
               <Map
                 ref={this.mapRef}
-                onBoundsChanged={this.onBoundsChanged}
+                // onBoundsChanged={this.onBoundsChanged}
                 center={center}
                 zoom={zoom}
-                onClick={setCoordinates}
+                provider={mapProvider}
+                onClick={this.setCoordinates}
                 animate
               >
                 {markersLayout}
@@ -215,15 +220,14 @@ MapObjectInfo.defaultProps = {
 };
 
 MapObjectInfo.propTypes = {
-  setCoordinates: PropTypes.func,
   mapHeigth: PropTypes.number,
   center: PropTypes.arrayOf(PropTypes.number),
   isFullscreenMode: PropTypes.bool,
-  onMarkerClick: PropTypes.func.isRequired,
   usedLocale: PropTypes.string,
   setMapFullscreenMode: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   wobject: PropTypes.object.isRequired,
+  history: PropTypes.shape().isRequired,
 };
 
 export default MapObjectInfo;
