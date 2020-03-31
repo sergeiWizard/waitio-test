@@ -35,9 +35,15 @@ export const getInitialUrl = (wobj, screenSize, { pathname, hash }) => {
       break;
     default:
       if (menuItems && menuItems.length) {
-        url = `${pathname}/menu#${(sortCustom &&
-          sortCustom.find(item => item !== TYPES_OF_MENU_ITEM.BUTTON)) ||
-          menuItems[0].author_permlink}`;
+        if (typeof sortCustom === 'object') {
+          url = `${pathname}/menu#${(sortCustom &&
+            sortCustom.find(item => item !== TYPES_OF_MENU_ITEM.BUTTON)) ||
+            menuItems[0].author_permlink}`;
+        } else {
+          url = `${pathname}/menu#${(sortCustom &&
+            sortCustom.split().find(item => item !== TYPES_OF_MENU_ITEM.BUTTON)) ||
+            menuItems[0].author_permlink}`;
+        }
       } else if (screenSize !== 'large') {
         url = `${pathname}/about`;
       }
