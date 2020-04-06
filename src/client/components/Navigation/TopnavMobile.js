@@ -81,7 +81,7 @@ import './Topnav.less';
     toggleModal,
   },
 )
-class Topnav extends React.Component {
+class TopnavMobile extends React.Component {
   static handleScrollToTop() {
     if (window) {
       window.scrollTo(0, 0);
@@ -349,60 +349,206 @@ class Topnav extends React.Component {
     );
   };
 
+  toggleVisible = () => {
+    this.setState({
+      visible: !this.state.visible
+    });
+  };
+
   burgerMenu = logStatus => {
     const isLoggedOut = logStatus === 'loggedOut';
-    const { isGuest } = this.props;
+    console.log('click')
+
+    const {
+      intl,
+      username,
+      userMetaData,
+      notifications,
+      loadingNotifications,
+      isGuest,
+      openChat,
+      messagesCount,
+      isAuthenticated,
+      autoCompleteSearchResults
+    } = this.props;
+
+    const {
+      notificationsPopoverVisible,
+      searchBarActive,
+      dropdownOpen
+    } = this.state;
+
+    const dropdownOptions = this.prepareOptions(autoCompleteSearchResults);
+
+    const lastSeenTimestamp = _.get(userMetaData, 'notifications_last_timestamp');
+    const notificationsCount = _.isUndefined(lastSeenTimestamp)
+      ? _.size(notifications)
+      : _.size(
+        _.filter(
+          notifications,
+          notification =>
+            lastSeenTimestamp < notification.timestamp &&
+            _.includes(PARSED_NOTIFICATIONS, notification.type),
+        ),
+      );
+    const displayBadge = notificationsCount > 0;
+    const notificationsCountDisplay = notificationsCount > 99 ? '99+' : notificationsCount;
+
     return (
-      <PopoverContainer
-        placement="bottom"
-        trigger="click"
-        visible={this.state.burgerMenuVisible}
-        onVisibleChange={this.handleBurgerMenuVisibleChange}
-        overlayStyle={{ position: 'fixed' }}
-        content={
-          <PopoverMenu onSelect={this.handleBurgerMenuSelect}>
-            <PopoverMenuItem key="myFeed" fullScreenHidden hideItem={isLoggedOut}>
-              <FormattedMessage id="my_feed" defaultMessage="My feed" />
-            </PopoverMenuItem>
-            <PopoverMenuItem key="discover-objects" fullScreenHidden>
-              <FormattedMessage id="discover" defaultMessage="Discover" />
-            </PopoverMenuItem>
-            <PopoverMenuItem key="quick_forecast" fullScreenHidden>
-              <FormattedMessage id="quick_forecast" defaultMessage="Forecast" />
-            </PopoverMenuItem>
-            {!isGuest && (
-              <PopoverMenuItem key="activity" mobileScreenHidden>
-                <FormattedMessage id="activity" defaultMessage="Activity" />
-              </PopoverMenuItem>
+      <Menu
+        className='TopnavMobile__menu-ant'
+        style={{width: 256}}
+        defaultSelectedKeys={["1"]}
+        defaultOpenKeys={["sub1"]}
+        mode="inline">
+
+        <Menu.ItemGroup className='TopnavMobile__user' key='user-and-wallets'>
+          <Menu.Item key="user">
+            <Link className="TopnavMobile__user" to={`/@${username}`} onClick={TopnavMobile.handleScrollToTop}>
+              <Avatar username={username} size={36} />
+            </Link>
+          </Menu.Item>
+        </Menu.ItemGroup>
+
+        <Menu.ItemGroup className='TopnavMobile__search' key='search-bar'>
+          <Menu.Item>
+            <AutoComplete
+              dropdownClassName="Topnav__search-dropdown-container"
+              dataSource={dropdownOptions}
+              onSearch={this.handleAutoCompleteSearch}
+              onSelect={this.handleSelectOnAutoCompleteDropdown}
+              onChange={this.handleOnChangeForAutoComplete}
+              defaultActiveFirstOption={false}
+              dropdownMatchSelectWidth={false}
+              optionLabelProp="value"
+              dropdownStyle={{ color: 'red' }}
+              value={this.state.searchBarValue}
+              open={dropdownOpen}
+              onFocus={this.handleOnFocus}
+            >
+              <Input
+                ref={ref => {
+                  this.searchInputRef = ref;
+                }}
+                onPressEnter={this.handleSearchForInput}
+                placeholder={intl.formatMessage({
+                  id: 'search_placeholder',
+                  defaultMessage: 'What are you looking for?',
+                })}
+                autoCapitalize="off"
+                autoCorrect="off"
+              />
+            </AutoComplete>
+          </Menu.Item>
+        </Menu.ItemGroup>
+
+
+
+        <Menu className='TopnavMobile__widgets-bar' key='widgets-bar' style={{ border: "none" }}>
+          <Menu.Item className="Topnav__menu-item" key="hot">
+            {this.hotNews()}
+          </Menu.Item>
+          <Menu.Item className="Topnav__menu-item" key="write">
+            <BTooltip
+              placement="bottom"
+              title={intl.formatMessage({ id: 'write_post', defaultMessage: 'Write post' })}
+              overlayClassName="Topnav__notifications-tooltip"
+              mouseEnterDelay={1}
+            >
+              <Link to="/editor" className="Topnav__link Topnav__link--action">
+                <i className="iconfont icon-write" />
+              </Link>
+            </BTooltip>
+          </Menu.Item>
+
+          <Menu.Item className='Topnav__menu-item' key='chat'>
+            {this.props.username && (
+              <div className="TopnavMobile__chat" key="more">
+                {!messagesCount ? (
+                  <Icon type="message" className="icon-chat" onClick={openChat} />
+                ) : (
+                  <div className="TopnavMobile__chat-button" onClick={openChat} role="presentation">
+                    {messagesCount > 99 ? '99+' : messagesCount}
+                  </div>
+                )}
+              </div>
             )}
-            <PopoverMenuItem key="bookmarks" mobileScreenHidden>
-              <FormattedMessage id="bookmarks" defaultMessage="Bookmarks" />
-            </PopoverMenuItem>
-            <PopoverMenuItem key="drafts">
-              <FormattedMessage id="drafts" defaultMessage="Drafts" />
-            </PopoverMenuItem>
-            <PopoverMenuItem key="settings">
-              <FormattedMessage id="settings" defaultMessage="Settings" />
-            </PopoverMenuItem>
-            <PopoverMenuItem key="replies" fullScreenHidden>
-              <FormattedMessage id="replies" defaultMessage="Replies" />
-            </PopoverMenuItem>
-            <PopoverMenuItem key="wallet">
-              <FormattedMessage id="wallet" defaultMessage="Wallet" />
-            </PopoverMenuItem>
-            <PopoverMenuItem key="about" fullScreenHidden>
-              <FormattedMessage id="about" defaultMessage="About" />
-            </PopoverMenuItem>
-            <PopoverMenuItem key="logout">
-              <FormattedMessage id="logout" defaultMessage="Logout" />
-            </PopoverMenuItem>
-          </PopoverMenu>
-        }
-      >
-        <a className="Topnav__link Topnav__link--menu">
-          <Icon type="menu" className="iconfont icon-menu" />
-        </a>
-      </PopoverContainer>
+          </Menu.Item>
+
+          <Menu.Item className="Topnav__menu-item" key="notifications">
+            <BTooltip
+              placement="bottom"
+              title={intl.formatMessage({ id: 'notifications', defaultMessage: 'Notifications' })}
+              overlayClassName="Topnav__notifications-tooltip"
+              mouseEnterDelay={1}
+            >
+              <PopoverContainer
+                placement="bottomRight"
+                trigger="click"
+                content={
+                  <Notifications
+                    notifications={notifications}
+                    onNotificationClick={this.handleCloseNotificationsPopover}
+                    st-card__chart
+                    currentAuthUsername={username}
+                    lastSeenTimestamp={lastSeenTimestamp}
+                    loadingNotifications={loadingNotifications}
+                    getUpdatedUserMetadata={this.props.getUserMetadata}
+                  />
+                }
+                visible={notificationsPopoverVisible}
+                onVisibleChange={this.handleNotificationsPopoverVisibleChange}
+                overlayClassName="Notifications__popover-overlay"
+                title={intl.formatMessage({ id: 'notifications', defaultMessage: 'Notifications' })}
+              >
+                <a className="Topnav__link Topnav__link--light Topnav__link--action">
+                  {displayBadge ? (
+                    <div className="Topnav__notifications-count">{notificationsCountDisplay}</div>
+                  ) : (
+                    <i className="iconfont icon-remind" />
+                  )}
+                </a>
+              </PopoverContainer>
+            </BTooltip>
+          </Menu.Item>
+        </Menu>
+
+        <Menu className='TopnavMobile__menu-wrap' key='menu-items' style={{color: 'white'}}>
+          <Menu.Item key='myFeed'>
+            <FormattedMessage id="my_feed" defaultMessage="My feed" />
+          </Menu.Item>
+          <Menu.Item key='discover-objects'>
+            <FormattedMessage id="discover" defaultMessage="Discover" />
+          </Menu.Item>
+          <Menu.Item key='discover-objects'>
+            <FormattedMessage id="quick_forecast" defaultMessage="Forecast" />
+          </Menu.Item>
+          <Menu.Item key='activity'>
+            <FormattedMessage id="activity" defaultMessage="Activity" />
+          </Menu.Item>
+          <Menu.Item key='bookmarks'>
+            <FormattedMessage id="bookmarks" defaultMessage="Bookmarks" />
+          </Menu.Item>
+          <Menu.Item key='drafts'>
+            <FormattedMessage id="drafts" defaultMessage="Drafts" />
+          </Menu.Item>
+          <Menu.Item key='settings'>
+            <FormattedMessage id="settings" defaultMessage="Settings" />
+          </Menu.Item>
+          <Menu.Item key='replies'>
+            <FormattedMessage id="replies" defaultMessage="Replies" />
+          </Menu.Item>
+          <Menu.Item key='wallet'>
+            <FormattedMessage id="wallet" defaultMessage="Wallet" />
+          </Menu.Item>
+          <Menu.Item key='about'>
+            <FormattedMessage id="about" defaultMessage="About" />
+          </Menu.Item>
+          <Menu.Item key='logout'>
+            <FormattedMessage id="logout" defaultMessage="Logout" />
+          </Menu.Item>
+        </Menu>
+      </Menu>
     );
   };
 
@@ -460,21 +606,8 @@ class Topnav extends React.Component {
   };
 
   menuForLoggedIn = () => {
-    const { intl, username, notifications, userMetaData, loadingNotifications } = this.props;
-    const { searchBarActive, notificationsPopoverVisible } = this.state;
-    const lastSeenTimestamp = _.get(userMetaData, 'notifications_last_timestamp');
-    const notificationsCount = _.isUndefined(lastSeenTimestamp)
-      ? _.size(notifications)
-      : _.size(
-        _.filter(
-          notifications,
-          notification =>
-            lastSeenTimestamp < notification.timestamp &&
-            _.includes(PARSED_NOTIFICATIONS, notification.type),
-        ),
-      );
-    const displayBadge = notificationsCount > 0;
-    const notificationsCountDisplay = notificationsCount > 99 ? '99+' : notificationsCount;
+    const { searchBarActive } = this.state;
+    const brandLogoPath = '/images/icons/ia-logo-mobile.png';
     return (
       <div
         className={classNames('Topnav__menu-container', {
@@ -482,68 +615,18 @@ class Topnav extends React.Component {
         })}
       >
         <ModalBroker />
-        <Menu selectedKeys={[]} className="Topnav__menu" mode="horizontal">
-          <Menu.Item className="Topnav__menu-item" key="hot">
-            {this.hotNews()}
-          </Menu.Item>
-          <Menu.Item className="Topnav__menu-item" key="write">
-            <BTooltip
-              placement="bottom"
-              title={intl.formatMessage({ id: 'write_post', defaultMessage: 'Write post' })}
-              overlayClassName="Topnav__notifications-tooltip"
-              mouseEnterDelay={1}
-            >
-              <Link to="/editor" className="Topnav__link Topnav__link--action">
-                <i className="iconfont icon-write" />
-              </Link>
-            </BTooltip>
-          </Menu.Item>
 
-          <Menu.Item className="Topnav__menu-item" key="notifications">
-            <BTooltip
-              placement="bottom"
-              title={intl.formatMessage({ id: 'notifications', defaultMessage: 'Notifications' })}
-              overlayClassName="Topnav__notifications-tooltip"
-              mouseEnterDelay={1}
-            >
-              <PopoverContainer
-                placement="bottomRight"
-                trigger="click"
-                content={
-                  <Notifications
-                    notifications={notifications}
-                    onNotificationClick={this.handleCloseNotificationsPopover}
-                    st-card__chart
-                    currentAuthUsername={username}
-                    lastSeenTimestamp={lastSeenTimestamp}
-                    loadingNotifications={loadingNotifications}
-                    getUpdatedUserMetadata={this.props.getUserMetadata}
-                  />
-                }
-                visible={notificationsPopoverVisible}
-                onVisibleChange={this.handleNotificationsPopoverVisibleChange}
-                overlayClassName="Notifications__popover-overlay"
-                title={intl.formatMessage({ id: 'notifications', defaultMessage: 'Notifications' })}
-              >
-                <a className="Topnav__link Topnav__link--light Topnav__link--action">
-                  {displayBadge ? (
-                    <div className="Topnav__notifications-count">{notificationsCountDisplay}</div>
-                  ) : (
-                    <i className="iconfont icon-remind" />
-                  )}
-                </a>
-              </PopoverContainer>
-            </BTooltip>
-          </Menu.Item>
-          <Menu.Item className="Topnav__menu-item" key="user">
-            <Link className="Topnav__user" to={`/@${username}`} onClick={Topnav.handleScrollToTop}>
-              <Avatar username={username} size={36} />
-            </Link>
-          </Menu.Item>
-          <Menu.Item className="Topnav__menu-item Topnav__menu-item--burger" key="more">
-            {this.burgerMenu()}
-          </Menu.Item>
-        </Menu>
+        <div className="Topnav__menu-more">
+          <Link to="/" className="Topnav__brand">
+            <img alt="InvestArena" src={brandLogoPath} className="Topnav__brand-icon" />
+          </Link>
+
+          <a onClick={this.toggleVisible} className="Topnav__link Topnav__link--menu">
+            <Icon type="menu" className="icon-menu" />
+            {this.state.visible && this.burgerMenu()}
+          </a>
+        </div>
+
       </div>
     );
   };
@@ -852,160 +935,50 @@ class Topnav extends React.Component {
     const {
       intl,
       isAuthenticated,
-      autoCompleteSearchResults,
       screenSize,
-      openChat,
-      messagesCount,
       platformName,
     } = this.props;
-    const { searchBarActive, dropdownOpen } = this.state;
-    const isMobile = screenSize === 'xsmall' || screenSize === 'small';
-    const brandLogoPath = isMobile ? '/images/icons/icon-72x72.png' : '/images/logo-brand.png';
-    const dropdownOptions = this.prepareOptions(autoCompleteSearchResults);
-    // const downBar = (
-    //   <AutoComplete.Option disabled key="all" className="Topnav__search-all-results">
-    //     <div className="search-btn" onClick={this.handleSearchAllResultsClick} role="presentation">
-    //       {intl.formatMessage(
-    //         {
-    //           id: 'search_all_results_for',
-    //           defaultMessage: 'Search all results for {search}',
-    //         },
-    //         { search: this.state.searchBarValue },
-    //       )}
-    //     </div>
-    //   </AutoComplete.Option>
-    // );
-    // const formattedAutoCompleteDropdown = _.isEmpty(dropdownOptions)
-    //   ? dropdownOptions
-    //   : dropdownOptions.concat([downBar]);
 
+    const isMobile = screenSize === 'xsmall' || screenSize === 'small';
     return (
       <div
-        className={classNames('Topnav', {
-          'top-hidden': this.state.visible && isMobile,
-        })}
+        className='Topnav'
       >
         <ModalDealConfirmation />
-        <div className="topnav-layout">
-          <div className={classNames('left', { 'Topnav__mobile-hidden': searchBarActive })}>
-            <Link to="/" className="Topnav__brand">
-              <span className="Topnav__brand-icon-mobile">investarena</span>
-              <img alt="InvestArena" src={brandLogoPath} className="Topnav__brand-icon" />
-            </Link>
-          </div>
-          <div
-            className={classNames(
-              'center',
-              'center-menu',
-              { mobileVisible: searchBarActive },
-              { 'center-menu--logedout': !isAuthenticated },
-            )}
-          >
-            <div className="Topnav__input-container" onBlur={this.handleOnBlur}>
-              <i className="iconfont icon-search" />
-              <AutoComplete
-                dropdownClassName="Topnav__search-dropdown-container"
-                dataSource={dropdownOptions}
-                onSearch={this.handleAutoCompleteSearch}
-                onSelect={this.handleSelectOnAutoCompleteDropdown}
-                onChange={this.handleOnChangeForAutoComplete}
-                defaultActiveFirstOption={false}
-                dropdownMatchSelectWidth={false}
-                optionLabelProp="value"
-                dropdownStyle={{ color: 'red' }}
-                value={this.state.searchBarValue}
-                open={dropdownOpen}
-                onFocus={this.handleOnFocus}
-              >
-                <Input
-                  ref={ref => {
-                    this.searchInputRef = ref;
-                  }}
-                  onPressEnter={this.handleSearchForInput}
-                  placeholder={intl.formatMessage({
-                    id: 'search_placeholder',
-                    defaultMessage: 'What are you looking for?',
-                  })}
-                  autoCapitalize="off"
-                  autoCorrect="off"
-                />
-              </AutoComplete>
-              {!!this.state.searchBarValue.length && (
-                <Icon
-                  type="close-circle"
-                  style={{ fontSize: '12px' }}
-                  theme="filled"
-                  onClick={this.handleClearSearchData}
-                />
-              )}
-            </div>
-            <div className="Topnav__horizontal-menu">
-              {!isMobile && (
-                <TopNavigation
-                  authenticated={isAuthenticated}
-                  location={this.props.history.location}
-                  isMobile={isMobile || screenSize === 'medium'}
-                />
-              )}
-            </div>
-          </div>
-          <div
-            className={classNames('Topnav__right-top', {
-              'Topnav__right-top--logedout': !isAuthenticated,
-            })}
-          >
-            <button
-              className={classNames('Topnav__mobile-search', {
-                'Topnav__mobile-search-close': searchBarActive,
+
+
+
+
+
+        <div className="Topnav__right-bottom">
+          {this.content()}
+          {isAuthenticated && (
+            <div
+              className={classNames('Topnav__broker', {
+                'justify-end': platformName === 'widgets',
               })}
-              onClick={this.handleMobileSearchButtonClick}
             >
-              <i
-                className={classNames('iconfont', {
-                  'icon-close': searchBarActive,
-                  'icon-search': !searchBarActive,
-                })}
-              />
-            </button>
-            {this.props.username && (
-              <div className="Topnav__chat" key="more">
-                {!messagesCount ? (
-                  <Icon type="message" className="icon-chat" onClick={openChat} />
-                ) : (
-                  <div className="Topnav__chat-button" onClick={openChat} role="presentation">
-                    {messagesCount > 99 ? '99+' : messagesCount}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-          <div className="Topnav__right-bottom">
-            {this.content()}
-            {isAuthenticated && (
-              <div
-                className={classNames('Topnav__broker', {
-                  'justify-end': platformName === 'widgets',
-                })}
-              >
-                {platformName === 'widgets' ? (
-                  <div className="st-header-broker-balance-pl-wrap">
-                    <Button type="primary" onClick={this.toggleModalBroker}>
-                      {intl.formatMessage({
-                        id: 'headerAuthorized.connectToBeaxy',
-                        defaultMessage: 'Connect to beaxy',
-                      })}
-                    </Button>
-                  </div>
-                ) : (
-                  <BrokerBalance />
-                )}
-              </div>
-            )}
-          </div>
+              {platformName === 'widgets' ? (
+                <div className="st-header-broker-balance-pl-wrap">
+                  <Button type="primary" onClick={this.toggleModalBroker}>
+                    {intl.formatMessage({
+                      id: 'headerAuthorized.connectToBeaxy',
+                      defaultMessage: 'Connect to beaxy',
+                    })}
+                  </Button>
+                </div>
+              ) : (
+                <BrokerBalance />
+              )}
+            </div>
+          )}
         </div>
+
+
+
       </div>
     );
   }
 }
 
-export default Topnav;
+export default TopnavMobile;
